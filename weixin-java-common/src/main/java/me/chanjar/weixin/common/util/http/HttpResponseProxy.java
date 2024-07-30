@@ -1,14 +1,10 @@
 package me.chanjar.weixin.common.util.http;
 
 import jodd.http.HttpResponse;
-import me.chanjar.weixin.common.error.WxError;
 import me.chanjar.weixin.common.error.WxErrorException;
 import okhttp3.Response;
 import org.apache.http.Header;
 import org.apache.http.client.methods.CloseableHttpResponse;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * <pre>
@@ -19,7 +15,6 @@ import java.util.regex.Pattern;
  * @author <a href="https://github.com/binarywang">Binary Wang</a>
  */
 public class HttpResponseProxy {
-  private static final Pattern PATTERN = Pattern.compile(".*filename=\"(.*)\"");
 
   private CloseableHttpResponse apacheHttpResponse;
   private HttpResponse joddHttpResponse;
@@ -79,9 +74,11 @@ public class HttpResponseProxy {
       throw new WxErrorException("无法获取到文件名，content为空");
     }
 
-    Matcher m = PATTERN.matcher(content);
-    if (m.matches()) {
-      return m.group(1);
+    int startIndex = content.indexOf("filename=\"");
+    if (startIndex != -1) {
+      startIndex += "filename=\"".length();
+      int endIndex = content.indexOf('"', startIndex);
+      return content.substring(startIndex, endIndex);
     }
 
     throw new WxErrorException("无法获取到文件名，header信息有问题");

@@ -197,7 +197,7 @@ public class WxMaImmediateDeliveryServiceImpl implements WxMaImmediateDeliverySe
 
   @Override
   public GetDeliveryListResponse getDeliveryList() throws WxErrorException {
-    String responseContent = this.wxMaService.post(InstantDelivery.GET_DELIVERY_LIST_URL,"");
+    String responseContent = this.wxMaService.post(InstantDelivery.GET_DELIVERY_LIST_URL,"{}");
     GetDeliveryListResponse response = GetDeliveryListResponse.fromJson(responseContent);
     if (response.getErrcode() == -1) {
       throw new WxErrorException(WxError.fromJson(responseContent, WxType.MiniApp));
